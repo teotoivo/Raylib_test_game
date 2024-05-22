@@ -126,8 +126,6 @@ int main(void)
 
 void UpdatePlayer(Player *player, EnvItem *envItems, int envItemsLength, float delta)
 {
-    if (IsKeyDown(KEY_LEFT)) player->position.x -= PLAYER_HORIZONTAL_SPEED*delta;
-    if (IsKeyDown(KEY_RIGHT)) player->position.x += PLAYER_HORIZONTAL_SPEED*delta;
     if (IsKeyDown(KEY_SPACE) && player->canJump)
     {
         player->verticalVelocity = -PLAYER_JUMP_VELOCITY;
@@ -136,26 +134,42 @@ void UpdatePlayer(Player *player, EnvItem *envItems, int envItemsLength, float d
 
     int hitFloor = 0;
 
-    float playerNextY = player->position.y += player->verticalVelocity*delta;
+
+    Vector2 *pPlayerNextPosition = &(player->position);
+    if (IsKeyDown(KEY_LEFT)) pPlayerNextPosition->x -= PLAYER_HORIZONTAL_SPEED*delta;
+    if (IsKeyDown(KEY_RIGHT)) pPlayerNextPosition->x += PLAYER_HORIZONTAL_SPEED*delta;
+    player->position.y += player->verticalVelocity*delta;
+
     for (int i = 0; i < envItemsLength; i++)
     {
         EnvItem *enviromentItem = envItems + i;
-        
+
         Vector2 *pPlayerPosition = &(player->position);
-        if (enviromentItem->blocking &&
-            enviromentItem->rect.x <= pPlayerPosition->x &&
-            enviromentItem->rect.x + enviromentItem->rect.width >= pPlayerPosition->x &&
-            enviromentItem->rect.y >= pPlayerPosition->y &&
-            enviromentItem->rect.y <= pPlayerPosition->y + player->verticalVelocity*delta)
+        
+        // Left Wall
+        Rectangle leftWall = { enviromentItem->rect.x, enviromentItem->rect.y, 1, enviromentItem->rect.height };
+        // Right Wall
+        Rectangle rightWall = { enviromentItem->rect.x + enviromentItem->rect.width, enviromentItem->rect.y, 1, enviromentItem->rect.height };
+        // Top Wall
+        Rectangle topWall = { enviromentItem->rect.x, enviromentItem->rect.y, enviromentItem->rect.width, 1 };
+        // Bottom Wall
+        Rectangle bottomWall = { enviromentItem->rect.x, enviromentItem->rect.y + enviromentItem->rect.height, enviromentItem->rect.width, 1 };
+
+        Rectangle playerHitbox = { pPlayerNextPosition->x, pPlayerNextPosition->x,         PLAYER_WIDTH, PLAYER_HEIGHT };
+
+        if (CheckCollisionRecs(playerHitbox, topWall))
         {
-            hitFloor = 1;
+            TraceLog(LOG_INFO, "Hit Floor!");
+            pPlayerNextPosition->y = enviromentItem->rect.y - PLAYER_HEIGHT; //Adjust y position so the player stands on top
             player->verticalVelocity = 0.0f;
-            pPlayerPosition->y = enviromentItem->rect.y;
+            hitFloor = 1;
         }
     }
+    
+
     if (!hitFloor)
     {
-        player->position.y += player->verticalVelocity*delta;
+        player->position.y += pPlayerNextPosition->y;
         player->verticalVelocity += G*delta;
         if (player->verticalVelocity > MAX_VERTICAL_VELOCITY)
         {
