@@ -4,6 +4,7 @@
 #include <stdio.h>
 
 #include "player.h"
+#include "globals.h"
 
 // Define constants
 #define WALKING_SPEED 150
@@ -23,7 +24,7 @@ int main(void)
 
     SetTargetFPS(60);
 
-    int animationClock = 0;
+    
     float animationTimerS = 0;
 
     //main game loop

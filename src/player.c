@@ -3,13 +3,12 @@
 #include <stdio.h>
 
 #include "player.h"
+#include "globals.h"
 
 
 
 const float PLAYER_WIDTH = 32.0f;
 const float PLAYER_HEIGHT = 32.0f;
-
-extern int animationClock;
 
 Player initPlayer(int x, int y)
 {
@@ -49,7 +48,10 @@ void unloadPlayer(Player* player)
 
 void drawPlayer(Player* player)
 {
-	printf("\n\n%d\n\n", animationClock);
+	char animationClockStr[10];
+	sprintf(animationClockStr, "%d", animationClock);
+	TraceLog(LOG_INFO, animationClockStr);
+	
 	if (player->direction != 0) {
     DrawTextureRec(player->animations[WALKING_ANIMATION], player->frameRec, player->position, WHITE);
   } else {
