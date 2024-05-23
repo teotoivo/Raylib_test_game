@@ -11,6 +11,12 @@
 
 int animationClock = 0;
 
+int getSpriteAnimationOffSet(int maxNum, float animationSpeedMultiplier) {
+    // Map the number to the range 0 to maxNum - 1, adjusted by the animationSpeedMultiplier
+    int result = (int)((animationClock * animationSpeedMultiplier) / 100.0 * maxNum);
+    return result % maxNum; // Ensure the result stays within 0 to maxNum - 1
+}
+
 int main(void)
 {
     //initalization
@@ -32,10 +38,10 @@ int main(void)
     {
         // Update variables
         float deltaTime = GetFrameTime();
-        if ((animationTimerS += deltaTime) > 0.100f) {
-            animationTimerS -= 0.100f;
+        if ((animationTimerS += deltaTime) > 0.010f) {
+            animationTimerS -= 0.010f;
             animationClock++;
-            if (animationClock > 10) animationClock = 0;
+            if (animationClock > 100) animationClock = 0;
         }
 
         player.direction = 0;
@@ -55,7 +61,9 @@ int main(void)
         }
 
         
-        player.frameRec.x = (float) PLAYER_WIDTH * animationClock;
+        // player.frameRec.x = (float) player.width * animationClock;
+        player.frameRec.x = (float) player.width * getSpriteAnimationOffSet(10, 2);
+        
 
 
         // Draw

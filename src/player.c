@@ -5,10 +5,8 @@
 #include "player.h"
 #include "globals.h"
 
-
-
-const float PLAYER_WIDTH = 32.0f;
-const float PLAYER_HEIGHT = 32.0f;
+const int PLAYER_WIDTH = 32;
+const int PLAYER_HEIGHT = 32;
 
 Player initPlayer(int x, int y)
 {
@@ -21,6 +19,9 @@ Player initPlayer(int x, int y)
 
 	player.animations[0] = idle;
 	player.animations[1] = walking;
+
+	player.height = PLAYER_HEIGHT;
+	player.width = PLAYER_WIDTH;
 
 	player.position.x = x;
 	player.position.y = y;
@@ -53,8 +54,8 @@ void drawPlayer(Player* player)
 	TraceLog(LOG_INFO, animationClockStr);
 	
 	if (player->direction != 0) {
-    DrawTextureRec(player->animations[WALKING_ANIMATION], player->frameRec, player->position, WHITE);
+    DrawTextureRec(player->animations[ANIMATION_WALKING], player->frameRec, player->position, WHITE);
   } else {
-     DrawTextureRec(player->animations[IDLE_ANIMATION], player->frameRec, player->position, WHITE);
+     DrawTextureRec(player->animations[ANIMATION_IDLE], player->frameRec, player->position, WHITE);
   }
 }

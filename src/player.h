@@ -3,12 +3,8 @@
 
 #include "raylib.h"
 
-#define IDLE_ANIMATION 0
-#define WALKING_ANIMATION 1
-
-// defined in player.c
-extern const float PLAYER_WIDTH;
-extern const float PLAYER_HEIGHT;
+#define ANIMATION_IDLE 0
+#define ANIMATION_WALKING 1
 
 typedef struct {
     Texture2D animations[2];
@@ -16,6 +12,8 @@ typedef struct {
     Vector2 position;
     int verticalVelocity;
     int direction;
+    int width;
+    int height;
 } Player;
 
 Player initPlayer(int x, int y);
