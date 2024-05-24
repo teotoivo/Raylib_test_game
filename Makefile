@@ -406,7 +406,8 @@ INCLUDE_DIR           ?= $(SRC_DIR)
 #------------------------------------------------------------------------------------------------
 PROJECT_SOURCE_FILES ?= \
     $(SRC_DIR)/main.c \
-    $(SRC_DIR)/player.c
+    $(SRC_DIR)/player.c \
+    $(SRC_DIR)/globals.c
 
     
 
