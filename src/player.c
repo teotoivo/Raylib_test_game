@@ -13,7 +13,11 @@ float walkingAnimationTimer = 0;
 
 int currentAnimation(Player* player)
 {
-    if (player->direction != 0) {
+    if (player->verticalVelocity < 0) {
+        return ANIMATION_JUMPING;
+    } else if (player->verticalVelocity > 0) {
+        return ANIMATION_FALLING;
+    } else if (player->direction != 0) {
         return ANIMATION_WALKING;
     } else {
         return ANIMATION_IDLE;
@@ -28,9 +32,13 @@ Player initPlayer(int x, int y)
 	//! IMPORTANT when adding more animations remember to update the unload loops size and the size of the array in the header
 	Texture2D idle = LoadTexture("resources/Main Characters/Virtual Guy/Idle (32x32).png");
     Texture2D walking = LoadTexture("resources/Main Characters/Virtual Guy/Run (32x32).png");
+    Texture2D jumping = LoadTexture("resources/Main Characters/Virtual Guy/Jump (32x32).png");
+    Texture2D falling = LoadTexture("resources/Main Characters/Virtual Guy/Fall (32x32).png");
 
-	player.sprites[0] = idle;
-	player.sprites[1] = walking;
+	player.sprites[ANIMATION_IDLE] = idle;
+	player.sprites[ANIMATION_WALKING] = walking;
+    player.sprites[ANIMATION_JUMPING] = jumping;
+    player.sprites[ANIMATION_FALLING] = falling;
 
 	player.height = PLAYER_HEIGHT;
 	player.width = PLAYER_WIDTH;
@@ -49,12 +57,14 @@ Player initPlayer(int x, int y)
 
     player.animationClocks.idle = 0;
     player.animationClocks.walking = 0;
+    player.animationClocks.jumping = 0;
+    player.animationClocks.falling = 0;
 	return player;
 }
 
 void unloadPlayer(Player* player)
 {
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 4; i++) {
         if (player->sprites[i].id != 0) {
             UnloadTexture(player->sprites[i]);
         }
@@ -65,6 +75,14 @@ void drawPlayer(Player* player)
 {
     switch (currentAnimation(player))
     {
+    case ANIMATION_JUMPING:
+        DrawTextureRec(player->sprites[ANIMATION_JUMPING], player->frameRec, player->position, WHITE);
+        break;
+
+    case ANIMATION_FALLING:
+        DrawTextureRec(player->sprites[ANIMATION_FALLING], player->frameRec, player->position, WHITE);
+        break;
+    
     case ANIMATION_IDLE:
         DrawTextureRec(player->sprites[ANIMATION_IDLE], player->frameRec, player->position, WHITE);
         break;
@@ -93,9 +111,38 @@ void updatePlayer(Player* player)
         player->position.x += WALKING_SPEED * GetFrameTime();
         player->direction = 1;
     }
+    
+    if (IsKeyDown(KEY_SPACE) && player->position.y >= SCREEN_HEIGHT / 2 - player->height) {
+    player->verticalVelocity = -PLAYER_JUMP_HEIGHT; // Set the jump velocity directly
+    }
 
+    // Gravity
+    player->verticalVelocity += GRAVITY * GetFrameTime();
+
+    // Ensure that the maximum falling speed does not exceed a certain limit
+    if (player->verticalVelocity > MAX_FALL_SPEED) {
+        player->verticalVelocity = MAX_FALL_SPEED;
+    }
+
+    player->position.y += player->verticalVelocity * GetFrameTime();
+
+    // Collision with the ground
+    if (player->position.y > SCREEN_HEIGHT / 2 - player->height) {
+        player->position.y = SCREEN_HEIGHT / 2 - player->height;
+        player->verticalVelocity = 0;
+    }
+
+
+
+    // Player animation
     switch (currentAnimation(player))
     {
+        case ANIMATION_JUMPING:
+            player->frameRec.x = 0;
+            break;
+        case ANIMATION_FALLING:
+            player->frameRec.x = 0;
+            break;
         case ANIMATION_IDLE:
             float idleAnimationSpeed = 0.15f;
             if ((idleAnimationTimer += GetFrameTime()) > idleAnimationSpeed) {
