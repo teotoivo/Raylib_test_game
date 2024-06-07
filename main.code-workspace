@@ -1,16 +1,21 @@
 {
-	"folders": [
-		{
-			"path": "."
-		}
-	],
-	"settings": {
-		"files.associations": {
-			"raylib.h": "c",
-			"math.h": "c",
-			"blocks.h": "c",
-			"stdio.h": "c",
-			"*.m": "c"
-		}
-	}
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.associations": {
+      "*.ejs": "html",
+      "raylib.h": "c",
+      "math.h": "c",
+      "blocks.h": "c",
+      "stdio.h": "c",
+      "*.m": "c",
+      "player.h": "c",
+      "globals.h": "c",
+      "level_start.h": "c",
+      "button.h": "c"
+    }
+  }
 }

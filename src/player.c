@@ -112,7 +112,7 @@ void updatePlayer(Player* player)
         player->direction = 1;
     }
     
-    if (IsKeyDown(KEY_SPACE) && player->position.y >= SCREEN_HEIGHT / 2 - player->height) {
+    if ((IsKeyDown(KEY_SPACE) | IsKeyDown(KEY_UP)) && player->position.y >= SCREEN_HEIGHT / 2 - player->height) {
     player->verticalVelocity = -PLAYER_JUMP_HEIGHT; // Set the jump velocity directly
     }
 

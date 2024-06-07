@@ -8,7 +8,7 @@
       "name": "Debug",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/main.exe",
+      "program": "${workspaceFolder}/bin/main.exe",
       "args": [],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -42,7 +42,7 @@
       "cwd": "${workspaceFolder}",
       "environment": [],
       "externalConsole": false,
-      "program": "${workspaceFolder}/main.exe",
+      "program": "${workspaceFolder}/bin/main.exe",
       "MIMode": "gdb",
       "windows": {
         "program": "${workspaceFolder}/main.exe",

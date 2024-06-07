@@ -6,3 +6,4 @@
 
 
 
+int currentLevel = LEVEL_START;// global level variable
