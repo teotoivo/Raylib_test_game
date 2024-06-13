@@ -8,7 +8,7 @@
 
 //levels
 #include "level_start.h"
-#include "level1.h"
+#include "level_1.h"
 
 int main(void)
 {
@@ -21,7 +21,7 @@ int main(void)
 
   bool shouldWindowClose = false;
 
-  //main game loop
+  //main game loop 
   while (!shouldWindowClose)
   {
 	

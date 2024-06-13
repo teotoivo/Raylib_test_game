@@ -1,3 +1,26 @@
+#**************************************************************************************************
+#
+#   raylib makefile for Desktop platforms, Raspberry Pi, Android and HTML5
+#
+#   Copyright (c) 2013-2019 Ramon Santamaria (@raysan5)
+#
+#   This software is provided "as-is", without any express or implied warranty. In no event
+#   will the authors be held liable for any damages arising from the use of this software.
+#
+#   Permission is granted to anyone to use this software for any purpose, including commercial
+#   applications, and to alter it and redistribute it freely, subject to the following restrictions:
+#
+#     1. The origin of this software must not be misrepresented; you must not claim that you
+#     wrote the original software. If you use this software in a product, an acknowledgment
+#     in the product documentation would be appreciated but is not required.
+#
+#     2. Altered source versions must be plainly marked as such, and must not be misrepresented
+#     as being the original software.
+#
+#     3. This notice may not be removed or altered from any source distribution.
+#
+#**************************************************************************************************
+
 .PHONY: all clean run
 
 # Define required environment variables
@@ -385,7 +408,7 @@ ifeq ($(PLATFORM),PLATFORM_DESKTOP)
     endif
 endif
 
-.PHONY: clean_shell_cmd clean_shell_sh
+
 
 # Clean everything
 clean:	clean_shell_$(PLATFORM_SHELL)
@@ -394,31 +417,31 @@ clean:	clean_shell_$(PLATFORM_SHELL)
 clean_shell_sh:
 ifeq ($(PLATFORM),PLATFORM_DESKTOP)
     ifeq ($(PLATFORM_OS),LINUX)
-		find . -type f -executable -delete
-		rm -fv *.o *.d
+		find $(OBJDIR) $(BINDIR) $(DEPDIR) -type f -executable -delete
+		rm -fv $(OBJDIR)/*.o $(DEPDIR)/*.d
     endif
     ifeq ($(PLATFORM_OS),OSX)
-		find . -type f -perm +ugo+x -delete
-		rm -f *.o *.d
+		find $(OBJDIR) $(BINDIR) $(DEPDIR) -type f -perm +ugo+x -delete
+		rm -f $(OBJDIR)/*.o $(DEPDIR)/*.d
     endif
 endif
 ifeq ($(PLATFORM),PLATFORM_RPI)
-	find . -type f -executable -delete
-	rm -fv *.o *.d
+	find $(OBJDIR) $(BINDIR) $(DEPDIR) -type f -executable -delete
+	rm -fv $(OBJDIR)/*.o $(DEPDIR)/*.d
 endif
 ifeq ($(PLATFORM),PLATFORM_DRM)
-	find . -type f -executable -delete
-	rm -fv *.o *.d
+	find $(OBJDIR) $(BINDIR) $(DEPDIR) -type f -executable -delete
+	rm -fv $(OBJDIR)/*.o $(DEPDIR)/*.d
 endif
 ifeq ($(PLATFORM),PLATFORM_WEB)
     ifeq ($(PLATFORM_OS),LINUX)
-		rm -fv *.o *.d $(PROJECT_NAME).data $(PROJECT_NAME).html $(PROJECT_NAME).js $(PROJECT_NAME).wasm
+		rm -fv $(OBJDIR)/*.o $(DEPDIR)/*.d $(BINDIR)/$(PROJECT_NAME).data $(BINDIR)/$(PROJECT_NAME).html $(BINDIR)/$(PROJECT_NAME).js $(BINDIR)/$(PROJECT_NAME).wasm
     endif
     ifeq ($(PLATFORM_OS),OSX)
-		rm -f *.o *.d $(PROJECT_NAME).data $(PROJECT_NAME).html $(PROJECT_NAME).js $(PROJECT_NAME).wasm
+		rm -f $(OBJDIR)/*.o $(DEPDIR)/*.d $(BINDIR)/$(PROJECT_NAME).data $(BINDIR)/$(PROJECT_NAME).html $(BINDIR)/$(PROJECT_NAME).js $(BINDIR)/$(PROJECT_NAME).wasm
     endif
 endif
 
 clean_shell_cmd: SHELL=cmd
 clean_shell_cmd:
-	del /f /q *.o *.d *.exe $(PROJECT_NAME).data $(PROJECT_NAME).html $(PROJECT_NAME).js $(PROJECT_NAME).wasm
+	del /f /q $(OBJDIR)\*.o $(DEPDIR)\*.d $(BINDIR)\*.exe $(BINDIR)\$(PROJECT_NAME).data $(BINDIR)\$(PROJECT_NAME).html $(BINDIR)\$(PROJECT_NAME).js $(BINDIR)\$(PROJECT_NAME).wasm
